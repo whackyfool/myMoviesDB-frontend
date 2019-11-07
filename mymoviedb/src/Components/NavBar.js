@@ -19,16 +19,7 @@ const useStyles = makeStyles(theme => ({
         backgroundRepeat: 'no-repeat',
         height: '80vh',
         boxShadow: 'none',
-        '&:after': {
-            left: '0',
-            width: '100%',
-            bottom: '0',
-            content: '" "',
-            position: 'absolute',
-            borderLeft: '100vw solid transparent',
-            borderBottom: '80px solid #ffffff',
-            boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2) inset, 0px 4px 5px 0px rgba(0,0,0,0.14) inset, 0px 1px 10px 0px rgba(0,0,0,0.12) inset'
-        },
+        clipPath: 'polygon(100% 0, 100% 80%, 0% 100%, 0 0)',
         textShadow: '5px 5px 10px #111'
     },
     navBarToolbar: {
@@ -74,7 +65,7 @@ const NavBar = (props) => {
     const classes = useStyles();
 
     return(
-        <div>
+        <div style={{filter: 'drop-shadow(2px 2px 10px darkred)'}}>
             <AppBar position="static" className={classes.navBarWrapper}>
                 <Toolbar className={classes.navBarToolbar}>
                     <img src={require("../logo.png")} className={classes.navlogo} height='75px' width='75px'/>

@@ -49,11 +49,11 @@ const cardStyles = makeStyles(theme => ({
         transition: '0.3s',
         maxWidth: '304',
         margin: '8vh',
-        boxShadow: '0 0 20px 0 rgba(0,0,0,0.12)',
+        boxShadow: '0 0 20px 0 rgba(200,0,0,0.25)',
         cursor: 'pointer',
         '&:hover': {
           transform: 'translateY(-7px)',
-          boxShadow: '0 4px 20px 0 rgba(0,0,0,0.12)',
+          boxShadow: '0 4px 20px 0 rgba(200,0,0,0.25)',
         }
     },
     MuiCardMediaroot: {

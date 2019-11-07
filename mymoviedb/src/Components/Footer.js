@@ -15,15 +15,7 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         height: '50vh',
         backgroundImage: 'url("https://justpaste.it/img/b58c437287d1ee4bac0ee7ab454f27e1.jpg")',
-        '&:before': {
-            right: '0',
-            width: '100%',
-            top: '0',
-            content: '" "',
-            position: 'absolute',
-            borderRight: '100vw solid transparent',
-            borderTop: '80px solid #ffffff',
-        },
+        clipPath: 'polygon(100% 0%, 100% 100%, 0% 100%, 0% 30%)',
         boxShadow: 'none'
     },
     footermain: {
@@ -57,7 +49,7 @@ const Footer = () => {
     const classes = useStyles();
 
     return(
-        <div>
+        <div style={{filter: 'drop-shadow(2px 2px 10px darkred)'}}>
             <AppBar position="static" className={classes.FooterWrapper}>
                 <div className={classes.footermain}>
                     <div className={classes.footercolumn}>

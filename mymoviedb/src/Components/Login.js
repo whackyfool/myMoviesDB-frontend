@@ -55,7 +55,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignUp() {
+export default function Login() {
   const classes = useStyles();
 
   return (
@@ -66,32 +66,10 @@ export default function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Log In
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="outlined"
@@ -123,12 +101,12 @@ export default function SignUp() {
             color="secondary"
             className={classes.submit}
           >
-            Sign Up
+            Log In
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-                <Link to="/Login" className={classes.link}>
-                    Already have an account? Sign in
+                <Link to="/Signup" className={classes.link}>
+                    Do not have an account? Sign up
                 </Link>
             </Grid>
           </Grid>

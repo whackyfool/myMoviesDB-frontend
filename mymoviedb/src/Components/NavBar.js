@@ -4,7 +4,9 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-
+import {
+	Link
+} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     navBarWrapper: {
@@ -15,7 +17,7 @@ const useStyles = makeStyles(theme => ({
         backgroundPositionX: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: '70vh',
+        height: '80vh',
         boxShadow: 'none',
         '&:after': {
             left: '0',
@@ -27,7 +29,6 @@ const useStyles = makeStyles(theme => ({
             borderBottom: '80px solid #ffffff',
             boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2) inset, 0px 4px 5px 0px rgba(0,0,0,0.14) inset, 0px 1px 10px 0px rgba(0,0,0,0.12) inset'
         },
-        fontFamily: 'roboto',
         textShadow: '5px 5px 10px #111'
     },
     navBarToolbar: {
@@ -41,23 +42,35 @@ const useStyles = makeStyles(theme => ({
     navTitle: {
         textAlign: 'left',
         marginLeft: '10vw',
-        marginTop: '2vw'
+        marginTop: '5vw'
     },
     navlogo: {
         marginTop: '4vh'
     },
+    navh2: {
+        wordSpacing: '3px'
+    },
     navh6: {
-        marginTop: '3vw'
+        marginTop: '3vw',
+        fontWeight: '600'
     },
     discover: {
         width: '10%',
         marginTop: '4vw',
         color: 'darkred',
         fontWeight: '600'
+    },
+    link: {
+        textDecoration: 'none',
+        color: 'darkred',
+        '&:hover &:focus &:visited &:link &:active': {
+            textDecoration: 'none',
+            color: 'darkred',
+        }
     }
 }));
 
-const NavBar = () => {
+const NavBar = (props) => {
     const classes = useStyles();
 
     return(
@@ -66,24 +79,30 @@ const NavBar = () => {
                 <Toolbar className={classes.navBarToolbar}>
                     <img src={require("../logo.png")} className={classes.navlogo} height='75px' width='75px'/>
                     <div>
-                        <Button type="submit" variant="contained" color="default" className={classes.navButton}>
-                            Log In
-                        </Button>
-                        <Button type="submit" variant="contained" color="secondary" className={classes.navButton}>
-                            Sign Up
-                        </Button>
+                        <Link to="/Login" className={classes.link}>
+                            <Button type="submit" variant="contained" color="default" className={classes.navButton}>
+                                Log In
+                            </Button>
+                        </Link>
+                        <Link to="/SignUp" className={classes.link}>
+                            <Button type="submit" variant="contained" color="secondary" className={classes.navButton}>
+                                Sign Up
+                            </Button>
+                        </Link>
                     </div>
                 </Toolbar>
                 <div className={classes.navTitle}>
-                    <Typography variant="h2" color="inherit">
-                        Mark your favourite movies !!
+                    <Typography variant="h3" color="inherit" className={classes.navh2}>
+                        MARK YOUR FAVOURITE MOVIES !!
                     </Typography>
                     <Typography variant="h6" color="inherit" className={classes.navh6}>
                         Create a free account to bookmark your favourite movies. Login anytime to get back your list.
                     </Typography>
-                    <Button type="submit" variant="contained" color="default" className={classes.discover}>
-                        Discover
-                    </Button>
+                    <Link to={props.url} className={classes.link}>
+                        <Button type="submit" variant="contained" color="default" className={classes.discover}>
+                            {props.nextAction}
+                        </Button>
+                    </Link>
                 </div>
             </AppBar>
         </div>

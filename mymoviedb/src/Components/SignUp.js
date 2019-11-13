@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as api from "../api";
+import { withRouter } from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -53,9 +55,50 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error: {
+    color: 'red'
+  }
 }));
 
-export default function SignUp() {
+function SignUp(props) {
+  const [email, setemail] = useState("");
+  const [fname, setfname] = useState("");
+  const [lname, setlname] = useState("");
+  const [password, setpassword] = useState("");
+  const [signupError, setsignupError] = useState("");
+
+  const { history } = props;
+
+  const handleInputChange = event => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    if(name=='email')
+      setemail(value);
+    if(name=='fname')
+      setfname(value);
+    if(name=='lname')
+      setlname(value);
+    if(name=='password')
+      setpassword(value);
+  };
+
+  const handleFormSubmit = async event => {
+    event.preventDefault();
+
+    if (email && password && fname && lname) {
+      const payload = { fname: fname, lname, email, password };
+      try {
+        await api.signup(payload);
+        history.push("/Login");
+      } catch (error) {
+        console.log(error.response);
+        setsignupError(error.toString());
+      }
+    }
+  };
+
+
   const classes = useStyles();
 
   return (
@@ -68,17 +111,20 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <p className={classes.error}>{signupError}</p>
+        <form className={classes.form} onSubmit={handleFormSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="fname"
                 variant="outlined"
                 required
                 fullWidth
                 id="firstName"
                 label="First Name"
+                value={fname}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -88,8 +134,10 @@ export default function SignUp() {
                 fullWidth
                 id="lastName"
                 label="Last Name"
-                name="lastName"
+                name="lname"
                 autoComplete="lname"
+                value={lname}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -101,6 +149,8 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -113,6 +163,8 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={handleInputChange}
               />
             </Grid>
           </Grid>
@@ -140,3 +192,5 @@ export default function SignUp() {
     </Container>
   );
 }
+
+export default withRouter(SignUp);

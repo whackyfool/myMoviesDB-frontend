@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import * as api from "../api";
+import { withRouter } from "react-router-dom";
+import { saveToken } from "../tokenUtils";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -53,9 +56,44 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error: {
+    color: 'red'
+  }
 }));
 
-export default function Login() {
+function Login(props) {
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [signinError, setsigninError] = useState("");
+
+  const handleInputChange = event => {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    if(name=='email')
+      setemail(value);
+    if(name=='password')
+      setpassword(value);
+  };
+
+  const handleFormSubmit = async event => {
+    event.preventDefault();
+    if (email && password) {
+      try {
+        const payload = { email: email, password };
+        const { data } = await api.signin(payload);
+        saveToken(data);
+        const { from } = {
+          from: { pathname: "/" }
+        };
+        props.history.push(from.pathname);
+      } catch (error) {
+        console.log(error);
+        setsigninError(error.toString());
+      }
+    }
+  };
+
   const classes = useStyles();
 
   return (
@@ -68,7 +106,8 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Log In
         </Typography>
-        <form className={classes.form} noValidate>
+        <p className={classes.error}>{signinError}</p>
+        <form className={classes.form} onSubmit={handleFormSubmit} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -79,6 +118,8 @@ export default function Login() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                value={email}
+                onChange={handleInputChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -91,6 +132,8 @@ export default function Login() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={handleInputChange}
               />
             </Grid>
           </Grid>
@@ -118,3 +161,5 @@ export default function Login() {
     </Container>
   );
 }
+
+export default withRouter(Login);

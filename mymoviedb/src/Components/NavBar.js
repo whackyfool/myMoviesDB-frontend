@@ -1,4 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { isAuthed } from "../tokenUtils";
+import { removeToken } from "../tokenUtils";
+import { withRouter } from "react-router-dom";
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -7,6 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
 	Link
 } from "react-router-dom";
+import { lineHeight } from '@material-ui/system';
 
 const useStyles = makeStyles(theme => ({
     navBarWrapper: {
@@ -17,10 +21,10 @@ const useStyles = makeStyles(theme => ({
         backgroundPositionX: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
-        height: '80vh',
+        height: '95vh',
         boxShadow: 'none',
         clipPath: 'polygon(100% 0, 100% 80%, 0% 100%, 0 0)',
-        textShadow: '5px 5px 10px #111'
+        textShadow: '5px 5px 5px #111'
     },
     navBarToolbar: {
         display: 'flex',
@@ -39,14 +43,19 @@ const useStyles = makeStyles(theme => ({
         marginTop: '4vh'
     },
     navh2: {
-        wordSpacing: '3px'
+        letterSpacing: '0.1em'
     },
     navh6: {
-        marginTop: '3vw',
-        fontWeight: '600'
+        fontSize: '1em',
+        paddingRight: '10%',
+        marginTop: '4vw',
+        textAlign: 'justify',
+        fontWeight: '500',
+        letterSpacing: '0.1em',
+        lineHeight: '1.8em'
     },
     discover: {
-        width: '10%',
+        width: '15%',
         marginTop: '4vw',
         color: 'darkred',
         fontWeight: '600'
@@ -64,22 +73,39 @@ const useStyles = makeStyles(theme => ({
 const NavBar = (props) => {
     const classes = useStyles();
 
+    const handleclick = () => {
+        removeToken();
+        props.history.push("/");
+    };
+
+    let buttons;
+    if(!isAuthed()) {
+        buttons = <div><Link to="/Login" className={classes.link}>
+                        <Button type="submit" variant="contained" color="default" className={classes.navButton}>
+                            Log In
+                        </Button>
+                    </Link>
+                    <Link to="/SignUp" className={classes.link}>
+                        <Button type="submit" variant="contained" color="secondary" className={classes.navButton}>
+                            Sign Up
+                        </Button>
+                    </Link></div>
+    }
+    else {
+        buttons = <div><Link to="/" className={classes.link}>
+                        <Button type="submit" onClick={handleclick} variant="contained" color="default" className={classes.navButton}>
+                            Log Out
+                        </Button>
+                    </Link></div>
+    }
+
     return(
         <div style={{filter: 'drop-shadow(2px 2px 10px darkred)'}}>
             <AppBar position="static" className={classes.navBarWrapper}>
                 <Toolbar className={classes.navBarToolbar}>
                     <img src={require("../logo.png")} className={classes.navlogo} height='75px' width='75px'/>
                     <div>
-                        <Link to="/Login" className={classes.link}>
-                            <Button type="submit" variant="contained" color="default" className={classes.navButton}>
-                                Log In
-                            </Button>
-                        </Link>
-                        <Link to="/SignUp" className={classes.link}>
-                            <Button type="submit" variant="contained" color="secondary" className={classes.navButton}>
-                                Sign Up
-                            </Button>
-                        </Link>
+                        {buttons}
                     </div>
                 </Toolbar>
                 <div className={classes.navTitle}>
@@ -87,7 +113,7 @@ const NavBar = (props) => {
                         MARK YOUR FAVOURITE MOVIES !!
                     </Typography>
                     <Typography variant="h6" color="inherit" className={classes.navh6}>
-                        Create a free account to bookmark your favourite movies. Login anytime to get back your list.
+                    My Movie Database is a community built movie and TV database. Every piece of data has been added by our amazing community dating back to 2008. TMDb's strong international focus and breadth of data is largely unmatched and something we're incredibly proud of. Put simply, we live and breathe community and that's precisely what makes us different.
                     </Typography>
                     <Link to={props.url} className={classes.link}>
                         <Button type="submit" variant="contained" color="default" className={classes.discover}>
@@ -99,4 +125,4 @@ const NavBar = (props) => {
         </div>
     )
 }
-export default NavBar;
+export default withRouter(NavBar);

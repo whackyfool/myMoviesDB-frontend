@@ -61,7 +61,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function SignUp(props) {
-  const [email, setemail] = useState("");
+  const [username, setusername] = useState("");
   const [fname, setfname] = useState("");
   const [lname, setlname] = useState("");
   const [password, setpassword] = useState("");
@@ -73,8 +73,8 @@ function SignUp(props) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    if(name=='email')
-      setemail(value);
+    if(name=='username')
+      setusername(value);
     if(name=='fname')
       setfname(value);
     if(name=='lname')
@@ -86,8 +86,8 @@ function SignUp(props) {
   const handleFormSubmit = async event => {
     event.preventDefault();
 
-    if (email && password && fname && lname) {
-      const payload = { fname: fname, lname, email, password };
+    if (username && password && fname && lname) {
+      const payload = { fname: fname, lname, username, password };
       try {
         await api.signup(payload);
         history.push("/Login");
@@ -147,9 +147,9 @@ function SignUp(props) {
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
+                name="username"
                 autoComplete="email"
-                value={email}
+                value={username}
                 onChange={handleInputChange}
               />
             </Grid>

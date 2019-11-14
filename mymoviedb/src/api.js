@@ -9,5 +9,5 @@ const setAuthHeader = () => ({
 });
 
 export const wakeup = () => axios.get("");
-export const signup = payload => axios.post(`/SignUp`, payload);
-export const signin = payload => axios.post(`/Login`, payload);
+export const signup = payload => axios.post(`/persons/signup`, payload);
+export const signin = payload => axios.post(`/login`, payload);

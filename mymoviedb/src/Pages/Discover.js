@@ -1,4 +1,6 @@
 import React, { useState ,useEffect} from 'react';
+import * as api from '../api';
+import { isAuthed } from "../tokenUtils";
 import SignUp from '../Components/SignUp.js'
 import NavBar from '../Components/NavBar.js'
 import Footer from '../Components/Footer.js'
@@ -21,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         flexWrap: 'wrap',
-        height: '4750px',
+        height: '5500px',
         paddingLeft: '3%',
         paddingRight: '3%'
     },
@@ -36,17 +38,37 @@ function Discover() {
     const classes = useStyles();
 
     const [results, setResults] = useState([{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}]);
-
+    const [favMovies, setfavmovies] = useState([])
+    const [personID, serpersonid] = useState(isAuthed())
+    
     useEffect(() => {
         fetchData();
-    });
+    }, [personID]);
     
     
     const fetchData = () => {
-        const url = "https://api.themoviedb.org/3/movie/top_rated?api_key=949c81c10a3a9c3f53385151b2c2a8cf&language=en-US&page=50";
+        const url = "https://api.themoviedb.org/3/movie/top_rated?api_key=949c81c10a3a9c3f53385151b2c2a8cf&language=en-US&page=1";
         return fetch(url)
             .then(response => response.json())
             .then(parsedJSON => setResults(parsedJSON.results))
+            .then(
+                async event => {
+                    try {
+                        const data = await api.getMovies()
+                        var l = (data.data).length
+                        setfavmovies(() => {
+                            var arr = [];
+                            for( var i=0; i<l; i++) {
+                                arr.push((data.data)[i].mid)
+                            }
+                            console.log(arr)
+                            return arr;
+                        })
+                    } catch (error) {
+                        console.log(error.response);
+                    }
+                }
+            )
             .catch(error => console.log(error));
     }
       
@@ -55,25 +77,26 @@ function Discover() {
             <NavBar nextAction="HOME" url="/"/>
             <h1 className={classes.mainheader}>Mark your favourite movies !!</h1>
             <div className={classes.cardswrapper}>
-                <MyCard data={results[0]}/>
-                <MyCard data={results[1]}/>
-                <MyCard data={results[3]}/>
-                <MyCard data={results[4]}/>
-                <MyCard data={results[5]}/>
-                <MyCard data={results[6]}/>
-                <MyCard data={results[7]}/>
-                <MyCard data={results[8]}/>
-                <MyCard data={results[9]}/>
-                <MyCard data={results[10]}/>
-                <MyCard data={results[11]}/>
-                <MyCard data={results[12]}/>
-                <MyCard data={results[13]}/>
-                <MyCard data={results[14]}/>
-                <MyCard data={results[15]}/>
-                <MyCard data={results[16]}/>
-                <MyCard data={results[17]}/>
-                <MyCard data={results[18]}/>
-                <MyCard data={results[19]}/>
+                <MyCard data={results[0]} favlist={favMovies}/>
+                <MyCard data={results[1]} favlist={favMovies}/>
+                <MyCard data={results[2]} favlist={favMovies}/>
+                <MyCard data={results[3]} favlist={favMovies}/>
+                <MyCard data={results[4]} favlist={favMovies}/>
+                <MyCard data={results[5]} favlist={favMovies}/>
+                <MyCard data={results[6]} favlist={favMovies}/>
+                <MyCard data={results[7]} favlist={favMovies}/>
+                <MyCard data={results[8]} favlist={favMovies}/>
+                <MyCard data={results[9]} favlist={favMovies}/>
+                <MyCard data={results[10]} favlist={favMovies}/>
+                <MyCard data={results[11]} favlist={favMovies}/>
+                <MyCard data={results[12]} favlist={favMovies}/>
+                <MyCard data={results[13]} favlist={favMovies}/>
+                <MyCard data={results[14]} favlist={favMovies}/>
+                <MyCard data={results[15]} favlist={favMovies}/>
+                <MyCard data={results[16]} favlist={favMovies}/>
+                <MyCard data={results[17]} favlist={favMovies}/>
+                <MyCard data={results[18]} favlist={favMovies}/>
+                <MyCard data={results[19]} favlist={favMovies}/>
             </div>
             <Footer/>
         </div>
@@ -137,11 +160,34 @@ const cardStyles = makeStyles(theme => ({
 const MyCard = (props) => {
     const classes = cardStyles()
 
+    const [isFavClicked, setisfavclicked] = useState(false);
+    const [flag, setflag] = useState(true);
+
     const trim = (str) => {
         if(str.length > 250) 
             str = str.substring(0,250) + "...";
         return str;
     }
+
+    const isFav = () => {
+        for(var i=0;i<20;i++) {
+            for(var j=0;j<props.favlist.length;j++) {
+                if(flag == true && props.favlist[j] == props.data.id) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    let favIcon;
+    if(isFav() || isFavClicked) {
+        favIcon = <Icon style={{color: 'red'}}>favorite</Icon>
+    }
+    else {
+        favIcon = <Icon>favorite_border</Icon>
+    }
+
 
     return (
         <Card className={classes.MuiPostCardone}>
@@ -172,8 +218,18 @@ const MyCard = (props) => {
             <IconButton>
                 <Icon>share</Icon>
             </IconButton>
-            <IconButton>
-                <Icon>favorite_border</Icon>
+            <IconButton onClick={async event => {
+                try {
+                    if(flag==true && isFav()==true)
+                        setflag(false);
+                    else
+                        setisfavclicked(!isFavClicked);
+                    await api.markFavourite(props.data.id);
+                } catch (error) {
+                    console.log(error.response);
+                }
+            }}>
+                {favIcon}
             </IconButton>
             </div>
         </CardActions>

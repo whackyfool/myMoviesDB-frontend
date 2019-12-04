@@ -47,7 +47,7 @@ function Discover() {
     
     
     const fetchData = () => {
-        const url = "https://api.themoviedb.org/3/movie/top_rated?api_key=949c81c10a3a9c3f53385151b2c2a8cf&language=en-US&page=1";
+        const url = "https://api.themoviedb.org/3/movie/top_rated?api_key={your key}&language=en-US&page=1";
         return fetch(url)
             .then(response => response.json())
             .then(parsedJSON => setResults(parsedJSON.results))
